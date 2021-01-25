@@ -1,0 +1,10 @@
+#!/bin/bash
+cd "$(dirname $0)"/..
+if [ -f ./venv/bin/activate ]; then
+	source ./venv/bin/activate
+else
+	python3 -m venv ./venv
+	source ./venv/bin/activate
+	pip3 install PyQt5
+fi
+python3 main.py
