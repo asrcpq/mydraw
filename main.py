@@ -15,13 +15,15 @@ class ScribbleArea(QWidget):
 		self.myPenWidth = 1
 		self.myPenColor = Qt.red
 		self.image = QImage()
-		self.lastPoint = QPoint()
 
+		frame_rect = app.desktop().frameGeometry()
+		width, height = frame_rect.width(), frame_rect.height()
+		self.resize(width, height)
+
+		self.setWindowTitle("mydraw")
 		self.setAttribute(Qt.WA_TranslucentBackground)
 		self.setWindowOpacity(0.5)
 
-		self.setWindowTitle("Scribble")
-		self.resize(500, 500)
 
 	def setPenColor(self, newColor):
 		self.myPenColor = newColor
@@ -30,9 +32,16 @@ class ScribbleArea(QWidget):
 		self.myPenWidth = newWidth
 
 	def clearImage(self):
-		self.image.fill(qRgba(0, 0, 0, 255))
+		self.image.fill(Qt.transparent)
 		self.modified = True
 		self.update()
+
+	def keyPressEvent(self, event):
+		key = event.key()
+		if key == Qt.Key_C:
+			self.clearImage()
+		if key == Qt.Key_Q:
+			self.close()
 
 	def tabletEvent(self, tabletEvent):
 		self.pos = tabletEvent.pos()
