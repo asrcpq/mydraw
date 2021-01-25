@@ -2,7 +2,11 @@
 
 Planned
 
-* [ ] Paintbrush, pressure
+* [x] Paintbrush, pressure
+
+* [ ] Improve paint quality
+
+* [ ] cursor style
 
 * [ ] Undo, Redo
 
