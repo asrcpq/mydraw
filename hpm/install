@@ -1,0 +1,11 @@
+#!/bin/bash
+cd "$(dirname $0)"/..
+if [ -d venv ]; then
+	exit
+else
+	python3 -m venv ./venv
+	source ./venv/bin/activate
+	pip3 install -r requirements.txt
+fi
+cd utils
+python3 pbgen.py
