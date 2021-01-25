@@ -5,6 +5,6 @@ if [ -f ./venv/bin/activate ]; then
 else
 	python3 -m venv ./venv
 	source ./venv/bin/activate
-	pip3 install PyQt5
+	pip3 install -r requirements.txt
 fi
 python3 main.py
