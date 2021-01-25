@@ -4,13 +4,15 @@ Planned
 
 * [x] Paintbrush, pressure
 
-* [ ] Improve paint quality
-
-* [ ] cursor style
-
-* [ ] Undo, Redo
+	[ ] Investigate subpixel precision in drawImage
 
 * [ ] Palette
+
+* [x] Undo, Redo
+
+	* [ ] Double buffering undo for paintbrush?(vs nested deque)
+
+* [ ] Clean code
 
 * [ ] Fill
 
@@ -20,10 +22,12 @@ Planned
 
 * [ ] Select(rect/free)
 
+* [ ] cursor style
+
 Not planned
 
 * [ ] Mouse should also work(but I do not have a mouse so cannot test)
 
 * [ ] Save/load files, layers(difficult)
 
-* [ ] Export(use screenshots)/import
+* [ ] Export/import(require a ui, maybe libgirara-like?)
