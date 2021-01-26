@@ -4,7 +4,9 @@ Planned
 
 * [x] Paintbrush, pressure
 
-	[ ] Investigate subpixel precision in drawImage
+	* [ ] Investigate subpixel precision in drawImage
+
+* [ ] Eraser
 
 * [ ] Palette
 
@@ -14,13 +16,13 @@ Planned
 
 * [ ] Clean code
 
-* [ ] Fill
+* [ ] Fill(solid, floodfill)
 
-* [ ] Zoom
+* [ ] Zoom, Rotate, Pan
 
 * [ ] Layers
 
-* [ ] Select(rect/free)
+	* [ ] Select(rect/free), Move, Scale, Rotate, Transform
 
 * [ ] cursor style
 
@@ -30,4 +32,4 @@ Not planned
 
 * [ ] Save/load files, layers(difficult)
 
-* [ ] Export/import(require a ui, maybe libgirara-like?)
+* [ ] Export/import(require ui, maybe libgirara-like?)
