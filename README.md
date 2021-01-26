@@ -2,7 +2,9 @@
 
 Planned
 
-* [x] Paintbrush, pressure
+* [x] rewrite in cpp
+
+* [ ] Paintbrush, pressure
 
 	* [ ] Investigate subpixel precision in drawImage
 
@@ -10,11 +12,9 @@ Planned
 
 * [ ] Palette
 
-* [x] Undo, Redo
+* [ ] Undo, Redo
 
 	* [ ] Double buffering undo for paintbrush?(vs nested deque)
-
-* [ ] Clean code
 
 * [ ] Fill(solid, floodfill)
 
