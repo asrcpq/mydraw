@@ -1,10 +1,2 @@
 #!/bin/bash
-cd "$(dirname $0)"/..
-if [ -f ./venv/bin/activate ]; then
-	source ./venv/bin/activate
-else
-	python3 -m venv ./venv
-	source ./venv/bin/activate
-	pip3 install -r requirements.txt
-fi
-python3 main.py
+"$(dirname $0)"/../build/mydraw

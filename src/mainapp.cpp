@@ -18,10 +18,10 @@ using std::max;
 MainApp::MainApp(int w, int h) {
 	resize(w, h);
 	setWindowTitle("mydraw");
-	setAttribute(Qt::WA_TranslucentBackground,true);
+	setAttribute(Qt::WA_StaticContents, true);
+	setAttribute(Qt::WA_TranslucentBackground, true);
 	update();
 	drawing = false;
-	//image = QImage(640, 480, QImage::Format_RGBA8888);
 }
 
 void MainApp::keyPressEvent(QKeyEvent *event) {
