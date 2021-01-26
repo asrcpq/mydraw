@@ -87,6 +87,6 @@ void MainApp::resizeEvent(QResizeEvent *event) {
 		QPainter painter(&newImage);
 		painter.drawImage(QPoint(0, 0), image);
 		image = std::move(newImage);
-		update();
+		//update();
 	}
 }

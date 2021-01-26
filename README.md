@@ -1,18 +1,20 @@
 ## TODO
 
-Planned
-
 * [x] rewrite in cpp
 
-* [ ] Paintbrush, pressure
+* [ ] Manual refresh after resize
 
-	* [ ] Investigate subpixel precision in drawImage
+* [ ] Paintbrush, pressure(draw brush image vs special algorithm)
+
+* [ ] Vulkan(for subpixel precision)
 
 * [ ] Eraser
 
 * [ ] Palette
 
-* [ ] Undo, Redo
+* [ ] Version control
+
+* [ ] Undo, Redo(patch based)
 
 	* [ ] Double buffering undo for paintbrush?(vs nested deque)
 
@@ -20,16 +22,12 @@ Planned
 
 * [ ] Zoom, Rotate, Pan
 
-* [ ] Layers
+* [ ] Layers(add, delete, move(up/down), hide/show)
 
 	* [ ] Select(rect/free), Move, Scale, Rotate, Transform
 
 * [ ] cursor style
 
-Not planned
-
 * [ ] Mouse should also work(but I do not have a mouse so cannot test)
-
-* [ ] Save/load files, layers(difficult)
 
 * [ ] Export/import(require ui, maybe libgirara-like?)
