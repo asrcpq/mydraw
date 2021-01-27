@@ -18,6 +18,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 add_executable(mydraw
 	src/main.cpp
 	src/mainapp.cpp
+	src/undoque.cpp
 )
 
 target_link_libraries(mydraw Qt5::Widgets)

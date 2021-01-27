@@ -1,5 +1,6 @@
 #include <QWidget>
 #include <QPen>
+#include "undoque.h"
 
 class MainApp:public QWidget {
 	Q_OBJECT
@@ -18,4 +19,5 @@ private:
 	float lastpressure;
 	QImage image;
 	QPen pen;
+	UndoQue undoque;
 };

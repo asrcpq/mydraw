@@ -8,7 +8,9 @@
 
 * [x] dummy export
 
-* [ ] Undo, Redo(patch based)
+* [x] Undo
+
+	* [ ] Redo
 
 	* [ ] Double buffering undo for paintbrush?(vs nested deque)
 

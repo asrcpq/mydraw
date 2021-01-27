@@ -48,6 +48,10 @@ void MainApp::keyPressEvent(QKeyEvent *event) {
 		setpen(true);
 	} else if(event->key() == Qt::Key_A) {
 		setpen(false);
+	} else if(event->key() == Qt::Key_Z) {
+		undoque.undo(image);
+		// TODO: update rect?
+		update();
 	}
 }
 
@@ -78,17 +82,19 @@ void MainApp::tabletEvent(QTabletEvent *event) {
 			break;
 		case QEvent::TabletMove:
 			if(drawing) {
-				QPainter painter(&image);
-				painter.setPen(pen);
-				painter.setCompositionMode(QPainter::CompositionMode_Source);
-				painter.setRenderHint(QPainter::Antialiasing, true);
-				painter.drawLine(lastpos, event->posF());
 				int r = pen.width() + 1;
 				QRect update_rect = QRect(
 					QPoint(lastpos.x(), lastpos.y()),
 					event->pos()
 				).normalized().adjusted(-r, -r, +r, +r);
-				// QRect update_rect = QRect(QPoint(0,0), QPoint(640, 480));
+				undoque.push1(update_rect.topLeft(), image.copy(update_rect));
+
+				QPainter painter(&image);
+				painter.setPen(pen);
+				painter.setCompositionMode(QPainter::CompositionMode_Source);
+				painter.setRenderHint(QPainter::Antialiasing, true);
+				// drawline after push1
+				painter.drawLine(lastpos, event->posF());
 				lastpos = event->posF();
 				lastpressure = event->pressure();
 				update(update_rect);
@@ -97,6 +103,7 @@ void MainApp::tabletEvent(QTabletEvent *event) {
 		case QEvent::TabletRelease:
 			if (drawing && event->buttons() == Qt::NoButton)
 				drawing = false;
+				undoque.finish();
 			break;
 		default:
 			break;
