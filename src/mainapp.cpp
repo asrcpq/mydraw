@@ -70,7 +70,7 @@ void MainApp::setpen(bool is_eraser) {
 void MainApp::tabletEvent(QTabletEvent *event) {
 	switch (event->type()) {
 		case QEvent::TabletPress:
-			if(!drawing) {
+			if(!drawing && event->buttons() == Qt::LeftButton) {
 				drawing = true;
 				lastpos = event->posF();
 				lastpressure = event->pressure();
