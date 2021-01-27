@@ -1,4 +1,5 @@
 #include <QWidget>
+#include <QPen>
 
 class MainApp:public QWidget {
 	Q_OBJECT
@@ -11,8 +12,10 @@ protected:
 	void resizeEvent(QResizeEvent *event) override;
 private:
 	void clearImage();
+	void setpen(bool is_eraser);
 	bool drawing;
 	QPointF lastpos;
 	float lastpressure;
 	QImage image;
+	QPen pen;
 };

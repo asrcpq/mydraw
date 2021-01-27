@@ -2,21 +2,25 @@
 
 * [x] rewrite in cpp
 
-* [ ] Manual refresh after resize
+* [x] clear
+
+* [x] Eraser
+
+* [ ] Version control(save/load)
+
+* [ ] Undo, Redo(patch based)
+
+	* [ ] Double buffering undo for paintbrush?(vs nested deque)
 
 * [ ] Paintbrush, pressure(draw brush image vs special algorithm)
 
 * [ ] Vulkan(for subpixel precision)
 
-* [ ] Eraser
+* [ ] size
+
+* [ ] cursor show size
 
 * [ ] Palette
-
-* [ ] Version control
-
-* [ ] Undo, Redo(patch based)
-
-	* [ ] Double buffering undo for paintbrush?(vs nested deque)
 
 * [ ] Fill(solid, floodfill)
 
@@ -25,8 +29,6 @@
 * [ ] Layers(add, delete, move(up/down), hide/show)
 
 	* [ ] Select(rect/free), Move, Scale, Rotate, Transform
-
-* [ ] cursor style
 
 * [ ] Mouse should also work(but I do not have a mouse so cannot test)
 

@@ -1,4 +1,5 @@
 #include <Qt>
+#include <QApplication>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QTabletEvent>
@@ -22,13 +23,37 @@ MainApp::MainApp(int w, int h) {
 	setAttribute(Qt::WA_TranslucentBackground, true);
 	update();
 	drawing = false;
+	setpen(false);
 }
 
 void MainApp::keyPressEvent(QKeyEvent *event) {
-	if(event->key() == Qt::Key_Q) {
-		close();
+	auto modifiers = QApplication::keyboardModifiers();
+	if(modifiers == Qt::ControlModifier) {
+		if(event->key() == Qt::Key_C) {
+			close();
+		}
 	} else if(event->key() == Qt::Key_C) {
 		clearImage();
+	} else if(event->key() == Qt::Key_E) {
+		setpen(true);
+	} else if(event->key() == Qt::Key_A) {
+		setpen(false);
+	}
+}
+
+void MainApp::setpen(bool is_eraser) {
+	if(is_eraser) {
+		pen.setStyle(Qt::SolidLine);
+		pen.setWidth(30);
+		pen.setBrush(Qt::transparent);
+		pen.setCapStyle(Qt::RoundCap);
+		pen.setJoinStyle(Qt::RoundJoin);
+	} else {
+		pen.setStyle(Qt::SolidLine);
+		pen.setWidth(3);
+		pen.setBrush(Qt::green);
+		pen.setCapStyle(Qt::RoundCap);
+		pen.setJoinStyle(Qt::RoundJoin);
 	}
 }
 
@@ -43,17 +68,12 @@ void MainApp::tabletEvent(QTabletEvent *event) {
 			break;
 		case QEvent::TabletMove:
 			if(drawing) {
-				//qDebug() << *event;
 				QPainter painter(&image);
-				QPen pen;
-				pen.setStyle(Qt::SolidLine);
-				pen.setWidth(2);
-				pen.setBrush(Qt::green);
-				pen.setCapStyle(Qt::RoundCap);
-				pen.setJoinStyle(Qt::RoundJoin);
 				painter.setPen(pen);
+				painter.setCompositionMode(QPainter::CompositionMode_Source);
+				painter.setRenderHint(QPainter::Antialiasing, true);
 				painter.drawLine(lastpos, event->posF());
-				int r = 4;
+				int r = pen.width() + 1;
 				QRect update_rect = QRect(
 					QPoint(lastpos.x(), lastpos.y()),
 					event->pos()
