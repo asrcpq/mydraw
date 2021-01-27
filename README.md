@@ -6,7 +6,7 @@
 
 * [x] Eraser
 
-* [ ] Version control(save/load)
+* [x] dummy export
 
 * [ ] Undo, Redo(patch based)
 
@@ -31,5 +31,3 @@
 	* [ ] Select(rect/free), Move, Scale, Rotate, Transform
 
 * [ ] Mouse should also work(but I do not have a mouse so cannot test)
-
-* [ ] Export/import(require ui, maybe libgirara-like?)

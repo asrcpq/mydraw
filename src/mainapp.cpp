@@ -13,6 +13,11 @@
 #include <QImage>
 #include "mainapp.h"
 
+//for image save
+#include <ctime>
+#include <cstdlib>
+#include <sstream>
+
 #include <algorithm>
 using std::max;
 
@@ -21,7 +26,6 @@ MainApp::MainApp(int w, int h) {
 	setWindowTitle("mydraw");
 	setAttribute(Qt::WA_StaticContents, true);
 	setAttribute(Qt::WA_TranslucentBackground, true);
-	update();
 	drawing = false;
 	setpen(false);
 }
@@ -31,6 +35,12 @@ void MainApp::keyPressEvent(QKeyEvent *event) {
 	if(modifiers == Qt::ControlModifier) {
 		if(event->key() == Qt::Key_C) {
 			close();
+		}
+		if(event->key() == Qt::Key_S) {
+			const char* s = getenv("XDG_DATA_HOME");
+			std::stringstream out;
+			out << s << "/mydraw/image_save/" << time(NULL) << ".png";
+			image.save(QString::fromStdString(out.str()));
 		}
 	} else if(event->key() == Qt::Key_C) {
 		clearImage();
