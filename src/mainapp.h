@@ -10,6 +10,7 @@ protected:
 	void tabletEvent(QTabletEvent *event) override;
 	void resizeEvent(QResizeEvent *event) override;
 private:
+	void clearImage();
 	bool drawing;
 	QPointF lastpos;
 	float lastpressure;

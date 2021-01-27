@@ -27,6 +27,8 @@ MainApp::MainApp(int w, int h) {
 void MainApp::keyPressEvent(QKeyEvent *event) {
 	if(event->key() == Qt::Key_Q) {
 		close();
+	} else if(event->key() == Qt::Key_C) {
+		clearImage();
 	}
 }
 
@@ -89,4 +91,11 @@ void MainApp::resizeEvent(QResizeEvent *event) {
 		image = std::move(newImage);
 		//update();
 	}
+}
+
+void MainApp::clearImage() {
+	QImage newImage(width(), height(), QImage::Format_RGBA8888);
+	newImage.fill(Qt::transparent);
+	image = std::move(newImage);
+	update();
 }
