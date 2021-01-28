@@ -1,4 +1,5 @@
 #include <QWidget>
+#include <QtGlobal>
 #include <QPen>
 #include "undoque.h"
 
@@ -14,10 +15,16 @@ protected:
 private:
 	void clearImage();
 	void setpen(bool is_eraser);
+	void tool_pen(QTabletEvent *event);
+	void tool_paintbrush(QTabletEvent *event);
 	bool drawing;
 	QPointF lastpos;
-	float lastpressure;
+	qreal lastpressure;
 	QImage image;
 	QPen pen;
 	UndoQue undoque;
+
+	// 'a': paintbrush
+	// 'A': pen/eraser
+	char tool_mode = 'A';
 };
