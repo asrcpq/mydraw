@@ -22,7 +22,9 @@
 
 * [ ] size
 
-* [x] Palette
+* [x] Palette(HS)
+
+	* [ ] Palette(VT)
 
 * [ ] cursor show size
 

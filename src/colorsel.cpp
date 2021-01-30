@@ -39,8 +39,13 @@ void ColorSel::tabletEvent(QTabletEvent *event) {
 	update(r1);
 	update(r2);
 	pf = event->posF();
+	if(pf.x() < 0) {pf.setX(0);} 
+	if(pf.x() >= width()) {pf.setX(width() - 0.1);} 
+	if(pf.y() < 0) {pf.setY(0);} 
+	if(pf.y() >= height()) {pf.setY(height() - 0.1);} 
+	qDebug() << pf;
 	mainapp->set_main_color(QColor::fromHsv(
-		pf.x() / width() * 256,
+		pf.x() / width() * 360,
 		pf.y() / height() * 256,
 		255
 	));
