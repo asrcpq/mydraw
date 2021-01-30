@@ -14,15 +14,17 @@
 
 	* [ ] Double buffering undo for paintbrush?(vs nested deque)
 
-* [ ] Paintbrush, pressure(draw brush image vs special algorithm)
+* Paintbrush algorithms
 
-* [ ] Vulkan(for subpixel precision)
+	* [x] quadrilateral + circle
+
+	* [ ] PB based
 
 * [ ] size
 
-* [ ] cursor show size
+* [x] Palette
 
-* [ ] Palette
+* [ ] cursor show size
 
 * [ ] Fill(solid, floodfill)
 
@@ -31,5 +33,7 @@
 * [ ] Layers(add, delete, move(up/down), hide/show)
 
 	* [ ] Select(rect/free), Move, Scale, Rotate, Transform
+
+---
 
 * [ ] Mouse should also work(but I do not have a mouse so cannot test)

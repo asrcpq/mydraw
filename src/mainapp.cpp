@@ -8,11 +8,11 @@
 #include <QRect>
 #include <QRectF>
 #include <QLineF>
-#include <QResizeEvent>
 #include <QPainter>
 #include <QPen>
 #include <QImage>
 #include "mainapp.h"
+#include "colorsel.h"
 
 //for image save
 #include <ctime>
@@ -23,13 +23,21 @@
 using std::max;
 
 MainApp::MainApp(int w, int h) {
+	main_color = Qt::green;
+	activeWidget = nullptr;
+	currentWidgetType = 0;
 	resize(w, h);
+	proc_resize();
 	setWindowTitle("mydraw");
 	setAttribute(Qt::WA_StaticContents, true);
 	setAttribute(Qt::WA_TranslucentBackground, true);
 	drawing = false;
 	setpen(false);
 	tool_mode = 'a';
+}
+
+void MainApp::set_main_color(QColor new_color) {
+	main_color = std::move(new_color);
 }
 
 void MainApp::keyPressEvent(QKeyEvent *event) {
@@ -51,9 +59,23 @@ void MainApp::keyPressEvent(QKeyEvent *event) {
 		}
 	} else if(event->key() == Qt::Key_C) {
 		clearImage();
+	} else if(event->key() == Qt::Key_Q) {
+		if(activeWidget == nullptr || currentWidgetType != 1) {
+			delete activeWidget;
+			activeWidget = new ColorSel(this);
+			currentWidgetType = 1;
+			activeWidget->show();
+		} else {
+			delete activeWidget;
+			activeWidget = nullptr;
+			currentWidgetType = 0;
+		}
 	} else if(event->key() == Qt::Key_E) {
 		tool_mode = 'A';
 		setpen(true);
+	} else if(event->key() == Qt::Key_R) {
+		proc_resize();
+		update();
 	} else if(event->key() == Qt::Key_A) {
 		tool_mode = 'a';
 	} else if(event->key() == Qt::Key_Z) {
@@ -100,7 +122,7 @@ void MainApp::tool_paintbrush(QTabletEvent *event) {
 	auto newpos = event->posF();
 	auto newposi = event->pos();
 	auto newpres = event->pressure();
-	auto rk = 5.;
+	auto rk = 2;
 	auto rmax = max(newpres, lastpressure) * rk + 3;
 	QRect update_rect = QRect(
 		QPoint(lastpos.x(), lastpos.y()),
@@ -122,7 +144,7 @@ void MainApp::tool_paintbrush(QTabletEvent *event) {
 		s1 * QPointF(y, -x) + lastpos
 	};
 	auto painter = QPainter(&image);
-	painter.setBrush(Qt::green);
+	painter.setBrush(main_color);
 	painter.setRenderHint(QPainter::Antialiasing, true);
 	painter.setPen(Qt::NoPen);
 	painter.drawConvexPolygon(parray, 4);
@@ -132,6 +154,7 @@ void MainApp::tool_paintbrush(QTabletEvent *event) {
 }
 
 void MainApp::tabletEvent(QTabletEvent *event) {
+	if(activeWidget != nullptr) {return;}
 	switch (event->type()) {
 		case QEvent::TabletPress:
 			if(!drawing && event->buttons() == Qt::LeftButton) {
@@ -168,7 +191,8 @@ void MainApp::paintEvent(QPaintEvent *event) {
 	painter.drawImage(dirtyRect, this->image, dirtyRect);
 }
 
-void MainApp::resizeEvent(QResizeEvent *event) {
+void MainApp::proc_resize() {
+	qDebug() << width() << height();
 	if(width() > image.width() || height() > image.height()) {
 		int newWidth = max(width() + 128, image.width());
 		int newHeight = max(height() + 128, image.height());
@@ -177,7 +201,6 @@ void MainApp::resizeEvent(QResizeEvent *event) {
 		QPainter painter(&newImage);
 		painter.drawImage(QPoint(0, 0), image);
 		image = std::move(newImage);
-		//update();
 	}
 }
 
