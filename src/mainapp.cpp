@@ -27,11 +27,12 @@ MainApp::MainApp(int w, int h) {
 	activeWidget = nullptr;
 	currentWidgetType = 0;
 	resize(w, h);
+	view = QRectF(0, 0, w, h);
 	proc_resize();
 	setWindowTitle("mydraw");
 	setAttribute(Qt::WA_StaticContents, true);
 	setAttribute(Qt::WA_TranslucentBackground, true);
-	drawing = false;
+	button_state = 0;
 	setpen(false);
 	tool_mode = 'a';
 }
@@ -56,6 +57,9 @@ void MainApp::keyPressEvent(QKeyEvent *event) {
 		if(event->key() == Qt::Key_A) {
 			tool_mode = 'A';
 			setpen(false);
+		} else if(event->key() == Qt::Key_E) {
+			tool_mode = 'A';
+			setpen(true);
 		}
 	} else if(event->key() == Qt::Key_C) {
 		clearImage();
@@ -70,9 +74,6 @@ void MainApp::keyPressEvent(QKeyEvent *event) {
 			activeWidget = nullptr;
 			currentWidgetType = 0;
 		}
-	} else if(event->key() == Qt::Key_E) {
-		tool_mode = 'A';
-		setpen(true);
 	} else if(event->key() == Qt::Key_R) {
 		proc_resize();
 		update();
@@ -119,29 +120,29 @@ void MainApp::tool_pen(QTabletEvent *event) {
 }
 
 void MainApp::tool_paintbrush(QTabletEvent *event) {
-	auto newpos = event->posF();
-	auto newposi = event->pos();
+	auto newpos = transform_view_rev(event->posF());
 	auto newpres = event->pressure();
+	auto lastpos_canvas = transform_view_rev(lastpos);
 	auto rk = 2;
 	auto rmax = max(newpres, lastpressure) * rk + 3;
 	QRect update_rect = QRect(
 		QPoint(lastpos.x(), lastpos.y()),
-		newposi
+		event->pos()
 	).normalized().adjusted(-rmax, -rmax, +rmax, +rmax);
 	undoque.push1(update_rect.topLeft(), image.copy(update_rect));
 
-	auto dist = QLineF(newpos, lastpos).length();
-	auto rnorm = (newpos - lastpos) / dist;
+	auto dist = QLineF(newpos, lastpos_canvas).length();
+	auto rnorm = (newpos - lastpos_canvas) / dist;
 	auto x = rnorm.x();
 	auto y = rnorm.y();
 	auto s1 = lastpressure * rk;
 	auto s2 = newpres * rk;
 	// 1<| lu ru rd ld
 	QPointF parray[4] = {
-		s1 * QPointF(-y, x) + lastpos,
+		s1 * QPointF(-y, x) + lastpos_canvas,
 		s2 * QPointF(-y, x) + newpos,
 		s2 * QPointF(y, -x) + newpos,
-		s1 * QPointF(y, -x) + lastpos
+		s1 * QPointF(y, -x) + lastpos_canvas
 	};
 	auto painter = QPainter(&image);
 	painter.setBrush(main_color);
@@ -157,26 +158,32 @@ void MainApp::tabletEvent(QTabletEvent *event) {
 	if(activeWidget != nullptr) {return;}
 	switch (event->type()) {
 		case QEvent::TabletPress:
-			if(!drawing && event->buttons() == Qt::LeftButton) {
-				drawing = true;
-				lastpos = event->posF();
-				lastpressure = event->pressure();
+			if(button_state == 0) {
+				if (event->buttons() == Qt::LeftButton) {
+					button_state = 1;
+				} else if (event->buttons() == Qt::MiddleButton) {
+					button_state = 2;
+				}
 			}
+			lastpos = event->posF();
+			lastpressure = event->pressure();
 			break;
 		case QEvent::TabletMove:
-			if(drawing) {
+			if(button_state == 1) {
 				if(tool_mode == 'A') {
 					tool_pen(event);
 				} else if(tool_mode == 'a') {
 					tool_paintbrush(event);
 				}
-				lastpos = event->posF();
-				lastpressure = event->pressure();
+			} else if(button_state == 2) {
+				pan_image(lastpos - event->posF());
 			}
+			lastpos = event->posF();
+			lastpressure = event->pressure();
 			break;
 		case QEvent::TabletRelease:
-			if (drawing && event->buttons() == Qt::NoButton)
-				drawing = false;
+			if (button_state != 0 && event->buttons() == Qt::NoButton)
+				button_state = 0;
 				undoque.finish();
 			break;
 		default:
@@ -185,10 +192,36 @@ void MainApp::tabletEvent(QTabletEvent *event) {
 	event->accept();
 }
 
+void MainApp::pan_image(QPointF dr) {
+	view.adjust(dr.x(), dr.y(), dr.x(), dr.y());
+	update();
+}
+
+// absolute point -> canvas point
+inline QPointF MainApp::transform_view(QPointF p0) {
+	return QPointF(
+		(p0.x() - view.left()) / width() * view.width(),
+		(p0.y() - view.top()) / height() * view.height()
+	);
+}
+
+// canvas point -> absolute point
+inline QPointF MainApp::transform_view_rev(QPointF p0) {
+	return QPointF(
+		p0.x() * width() / view.width() + view.left(),
+		p0.y() * height() / view.height() + view.top()
+	);
+}
+
 void MainApp::paintEvent(QPaintEvent *event) {
 	QPainter painter(this);
-	QRect dirtyRect = event->rect();
-	painter.drawImage(dirtyRect, this->image, dirtyRect);
+	QRectF dirtyRect = event->rect();
+	// transform to view
+	auto new_lu = transform_view_rev(dirtyRect.topLeft());
+	auto new_rd = transform_view_rev(dirtyRect.bottomRight());
+	auto transformed_dirty = QRectF(new_lu, new_rd);
+	// qDebug() << transformed_dirty << dirtyRect;
+	painter.drawImage(dirtyRect, this->image, transformed_dirty);
 }
 
 void MainApp::proc_resize() {

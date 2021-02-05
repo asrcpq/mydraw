@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QImage>
 #include <QPen>
+#include <QRectF>
 #include "undoque.h"
 #include "resource_manager.h"
 
@@ -22,12 +23,16 @@ protected:
 private:
 	void clearImage();
 	void setpen(bool is_eraser);
+	QPointF transform_view(QPointF p0);
+	QPointF transform_view_rev(QPointF p0);
+	void pan_image(QPointF dr);
 	void tool_pen(QTabletEvent *event);
 	void tool_paintbrush(QTabletEvent *event);
 	void proc_resize();
-	bool drawing;
+	int button_state; // 0 nothing, 1 drawing, 2 panning
 	QPointF lastpos;
 	qreal lastpressure;
+	QRectF view;
 	QImage image;
 	QPen pen;
 	QColor main_color;
