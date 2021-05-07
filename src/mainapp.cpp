@@ -224,6 +224,13 @@ void MainApp::paintEvent(QPaintEvent *event) {
 	auto transformed_dirty = QRectF(new_lu, new_rd);
 	// qDebug() << transformed_dirty << dirtyRect;
 	painter.drawImage(dirtyRect, this->image, transformed_dirty);
+
+	// draw frame
+	painter.setPen(Qt::gray);
+	auto rect = image.rect();
+	auto c2w_lu = transform_view(rect.topLeft());
+	auto c2w_rd = transform_view(rect.bottomRight());
+	painter.drawRect(QRectF(c2w_lu, c2w_rd));
 }
 
 void MainApp::proc_resize() {
