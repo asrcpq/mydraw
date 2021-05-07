@@ -104,6 +104,8 @@ void MainApp::setpen(bool is_eraser) {
 
 void MainApp::tool_pen(QTabletEvent *event) {
 	int r = pen.width() + 1;
+	auto newpos = transform_view_rev(event->posF());
+	auto lastpos_canvas = transform_view_rev(lastpos);
 	QRect update_rect = QRect(
 		QPoint(lastpos.x(), lastpos.y()),
 		event->pos()
@@ -115,7 +117,7 @@ void MainApp::tool_pen(QTabletEvent *event) {
 	painter.setCompositionMode(QPainter::CompositionMode_Source);
 	painter.setRenderHint(QPainter::Antialiasing, true);
 	// drawline after push1
-	painter.drawLine(lastpos, event->posF());
+	painter.drawLine(lastpos_canvas, newpos);
 	update(update_rect);
 }
 
