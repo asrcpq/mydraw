@@ -19,7 +19,9 @@
 #include <cstdlib>
 #include <sstream>
 
+#include <iostream>
 #include <algorithm>
+
 using std::max;
 
 MainApp::MainApp(int w, int h) {
@@ -102,6 +104,12 @@ void MainApp::setpen(bool is_eraser) {
 	}
 }
 
+QRect qrectf_from_qpointfs(QPointF p1, QPointF p2) {
+	QPoint topleft = QPoint((int)std::min(p1.x(), p2.x()) - 2, (int)std::min(p1.y(), p2.y()) - 2);
+	QSize size = QSize((int)std::abs(p1.x() - p2.x()) + 5, (int)std::abs(p1.y() - p2.y()) + 5);
+	return QRect(topleft, size);
+}
+
 void MainApp::tool_pen(QTabletEvent *event) {
 	int r = pen.width() + 1;
 	auto newpos = transform_view_rev(event->posF());
@@ -110,7 +118,8 @@ void MainApp::tool_pen(QTabletEvent *event) {
 		QPoint(lastpos.x(), lastpos.y()),
 		event->pos()
 	).normalized().adjusted(-r, -r, +r, +r);
-	undoque.push1(update_rect.topLeft(), image.copy(update_rect));
+	QRect canvas_update_rect = qrectf_from_qpointfs(newpos, lastpos_canvas);
+	undoque.push1(canvas_update_rect.topLeft(), image.copy(canvas_update_rect));
 
 	QPainter painter(&image);
 	painter.setPen(pen);
@@ -131,7 +140,8 @@ void MainApp::tool_paintbrush(QTabletEvent *event) {
 		QPoint(lastpos.x(), lastpos.y()),
 		event->pos()
 	).normalized().adjusted(-rmax, -rmax, +rmax, +rmax);
-	undoque.push1(update_rect.topLeft(), image.copy(update_rect));
+	QRect canvas_update_rect = qrectf_from_qpointfs(newpos, lastpos_canvas);
+	undoque.push1(canvas_update_rect.topLeft(), image.copy(canvas_update_rect));
 
 	auto dist = QLineF(newpos, lastpos_canvas).length();
 	auto rnorm = (newpos - lastpos_canvas) / dist;
