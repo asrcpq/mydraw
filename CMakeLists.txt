@@ -24,3 +24,5 @@ add_executable(mydraw
 )
 
 target_link_libraries(mydraw Qt5::Widgets)
+
+install(TARGETS mydraw DESTINATION bin)
