@@ -1,10 +1,10 @@
 let
-  pkgs = import <nixpkgs> {};
+	pkgs = import <nixpkgs> {};
 in
 pkgs.stdenv.mkDerivation {
 	pname = "mydraw";
 	version = "1.0";
-	src = /home/asrcpq/xdg/misc/test.tar.gz;
+	src = ./.;
 
 	buildInputs = [
 		pkgs.qt5.qtbase
@@ -17,6 +17,11 @@ pkgs.stdenv.mkDerivation {
 	'';
 
 	buildPhase = ''
-		make
+		make -j
+	'';
+
+	installPhase = ''
+		mkdir -p $out/bin
+		mv mydraw $out/bin
 	'';
 }
