@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+cd "$(dirname $0)"/..
+mkdir -p image_save
+mkdir -p build && cd build
+cmake ..
+make -j
+# cd utils
+# python3 pbgen.py
